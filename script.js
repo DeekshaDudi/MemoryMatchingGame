@@ -22,7 +22,16 @@ let lockBoard = false;
 
 */
 function initGame() {
-    // Write your code here
+
+    const gameBoard = document.getElementById("game-board");
+    gameBoard.innerHTML = "";
+    resetBoard();
+    
+    cards = shuffleArray([...symbols, ...symbols]);
+    cards.forEach(symbol => {
+        const card = createCard(symbol);
+        gameBoard.append(card);
+    });
 
     document.getElementById('restart-btn').addEventListener('click', initGame);
 }
@@ -34,7 +43,16 @@ function initGame() {
     Also make sure to add the event listener with the 'flipCard' function
 */
 function createCard(symbol) {
-    // Write your code here
+
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    card.dataset.symbol = symbol
+    card.addEventListener("click", () => {
+        flipCard(card);
+    });
+
+    return card;
 }
 
 /*
@@ -48,7 +66,17 @@ function createCard(symbol) {
 function flipCard(card) {
     // If the board is supposed to be locked or you picked the same card you already picked
     if (lockBoard || card === firstCard) return;
-    // Write your code here
+    
+    card.classList.add("flipped");
+    card.textContent = card.dataset.symbol;
+
+    if (firstCard == null) {
+        firstCard = card;
+    }
+    else {
+        secondCard = card;
+        checkForMatch();
+    }
 }
 
 /* 
@@ -57,7 +85,13 @@ function flipCard(card) {
     Otherwise, you should unflip the card and continue playing normally.
 */
 function checkForMatch() {
-    // Write your code here
+    
+    if (firstCard.dataset.symbol == secondCard.dataset.symbol) {
+        disableCards();
+    }
+    else {
+        unflipCards();
+    }
 }
 
 /* 
@@ -66,7 +100,10 @@ function checkForMatch() {
     to reset the firstCard, secondCard, and lockBoard variables. (That's been written for you already)
 */
 function disableCards() {
-    // Write your code here
+    firstCard.classList.add("matched");
+    secondCard.classList.add("matched");
+
+    resetBoard();
 }
  
 /* ---------------------  Everything under has already been done for you -------------------------- */
@@ -97,6 +134,8 @@ function shuffleArray(array) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+
+    return array;
 }
 
 initGame();
