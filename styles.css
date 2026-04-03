@@ -38,6 +38,7 @@ body {
 .card.flipped {
     background-color: #fff;
     color: #333;
+    transform: rotateY(180deg);
 }
 
 .card.matched {
